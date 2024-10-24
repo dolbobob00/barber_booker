@@ -1,0 +1,58 @@
+name: barber_booker
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+dependencies:
+  awesome_snackbar_content: ^0.1.4
+  cloud_firestore: ^5.4.4
+  firebase_auth: ^5.3.1
+  firebase_core: ^3.6.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_neumorphic: ^3.2.0
+  go_router: ^14.3.0
+  hive_flutter: ^1.1.0
+  hive_listener: ^1.2.1
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/img/
+    - assets/img/logo.png
+    - assets/icons/splash_screen/
+
+  fonts:
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/main_text/Caveat-Regular.ttf
+        - asset: assets/fonts/main_text/Caveat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/main_text/Caveat-Medium.ttf
+          weight: 300
+        - asset: assets/fonts/main_text/Caveat-SemiBold.ttf
+          weight: 500
+    - family: Unifraktur
+      fonts:
+        - asset: assets/fonts/splash_screen/UnifrakturMaguntia-Regular.ttf
+    - family: Nambour
+      fonts:
+        - asset: assets/fonts/main_text/Nambour-nR22M.ttf
+    - family: ElMessiri
+      fonts:
+        - asset: assets/fonts/main_text/ElMessiri-Regular.ttf
+        - asset: assets/fonts/main_text/ElMessiri-Bold.ttf
+          weight: 700
+    - family: PTSansCaption
+      fonts:
+        - asset: assets/fonts/main_text/PTSansCaption-Regular.ttf
