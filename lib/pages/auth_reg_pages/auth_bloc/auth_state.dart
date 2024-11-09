@@ -15,13 +15,13 @@ final class AuthLoading extends AuthState {}
 // ignore: must_be_immutable
 class AuthLoginState extends AuthState {
   final User? user;
-  AuthLoginState({
-    required this.user,
-  });
+  String status;
+  AuthLoginState({required this.user, required this.status});
 
-  AuthLoginState copyWith({User? user, bool? isLoading}) {
+  AuthLoginState copyWith({User? user, String? status}) {
     return AuthLoginState(
       user: user ?? this.user,
+      status: status ?? this.status,
     );
   }
 }

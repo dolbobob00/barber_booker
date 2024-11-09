@@ -1,11 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:barber_booker/extensions/string_extension.dart';
 import 'package:barber_booker/features/my_button_text.dart';
 import 'package:barber_booker/features/my_input_field.dart';
 import 'package:barber_booker/features/neuro_wrapper.dart';
 import 'package:barber_booker/features/reg_as_row.dart';
-import 'package:barber_booker/pages/auth_bloc/auth_bloc.dart';
+import 'package:barber_booker/pages/auth_reg_pages/auth_bloc/auth_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:go_router/go_router.dart';
@@ -38,10 +38,39 @@ class RegistrationPage extends StatelessWidget {
       );
     }
 
+    statusHandedPushToDifferentPages(String status) {
+      print('Push');
+      if (status == 'none') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/register');
+          },
+        );
+      } else if (status == 'user') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/home');
+          },
+        );
+      } else if (status == 'barber') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/barber_page');
+          },
+        );
+      } else if (status == 'admin') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/admin_page');
+          },
+        );
+      }
+    }
+
     final themeof = Theme.of(context);
     final authBloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: themeof.colorScheme.primary,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +114,8 @@ class RegistrationPage extends StatelessWidget {
           MyInputField(
             focusNode: passwordFocus,
             icon: Icon(
-              Icons.remove_red_eye, color: themeof.colorScheme.secondary,
+              Icons.remove_red_eye,
+              color: themeof.colorScheme.secondary,
             ),
             secureText: true,
             labelText: 'password',
@@ -102,9 +132,10 @@ class RegistrationPage extends StatelessWidget {
               if (state is AuthError) {
                 errorSnackBar(state.error);
               } else if (state is AuthLoginState && state.user != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  context.go('/home');
-                });
+                print('Should check state state');
+                statusHandedPushToDifferentPages(
+                  state.status,
+                );
               }
             },
             builder: (context, state) {
@@ -121,7 +152,8 @@ class RegistrationPage extends StatelessWidget {
               func: () {
                 if (textEditingControllerPasswordConfirm.text ==
                         textEditingControllerPassword.text &&
-                    textEditingControllerEmail.text.isNotEmpty) {
+                    textEditingControllerEmail.text.isNotEmpty &&
+                    textEditingControllerEmail.text.isValidEmail()) {
                   try {
                     authBloc.add(
                       RegisterEvent(
@@ -143,9 +175,10 @@ class RegistrationPage extends StatelessWidget {
                   errorSnackBar(
                     'Password mismatch',
                   );
-                } else if (textEditingControllerEmail.text.isEmpty) {
+                } else if (textEditingControllerEmail.text.isEmpty ||
+                    !textEditingControllerEmail.text.isValidEmail()) {
                   errorSnackBar(
-                    'Must have email',
+                    'Check your email.',
                   );
                 }
               },
@@ -187,7 +220,7 @@ class RegistrationPage extends StatelessWidget {
                     builder: (context) => Dialog(
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
-                        height: MediaQuery.of(context).size.height * 0.25,
+                        height: MediaQuery.of(context).size.height * 0.15,
                         child: Column(
                           children: [
                             Text(
@@ -196,17 +229,9 @@ class RegistrationPage extends StatelessWidget {
                                   color: themeof.colorScheme.secondary),
                             ),
                             Text(
-                              'Input your UID',
+                              'Just register and ask admin to upgrade your status',
                               style: themeof.textTheme.bodySmall!.copyWith(
                                   color: themeof.colorScheme.secondary),
-                            ),
-                            MyInputField(
-                              icon: Icon(
-                                Icons.remove_red_eye,
-                              ),
-                              labelText: 'UID (ask it from manager)',
-                              secureText: true,
-                              textEditingController: textEditingControllerUID,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -226,15 +251,7 @@ class RegistrationPage extends StatelessWidget {
                                     color: themeof.colorScheme.secondary,
                                   ),
                                   func: () {
-                                    try {
-                                      authBloc.add(
-                                        SignUpAsAdminEvent(),
-                                      );
-                                    } catch (e) {
-                                      errorSnackBar(
-                                        e.toString(),
-                                      );
-                                    }
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ],
@@ -251,14 +268,61 @@ class RegistrationPage extends StatelessWidget {
                   Icons.person_add_alt,
                   color: themeof.colorScheme.secondary,
                 ),
-                func: () {},
+                func: () => showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.165,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Why choose us?',
+                            style: themeof.textTheme.bodySmall!
+                                .copyWith(color: themeof.colorScheme.secondary),
+                          ),
+                          Text(
+                            'Fast responsibility, awesome haircuts and cute admin!',
+                            style: themeof.textTheme.bodySmall!
+                                .copyWith(color: themeof.colorScheme.secondary),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              MyIconButton(
+                                icon: Icon(
+                                  Icons.close,
+                                  color: themeof.colorScheme.secondary,
+                                ),
+                                func: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              MyIconButton(
+                                icon: Icon(
+                                  Icons.arrow_circle_right,
+                                  color: themeof.colorScheme.secondary,
+                                ),
+                                func: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
               MyIconButton(
-                icon: Icon(
-                  Icons.workspace_premium,
-                  color: themeof.colorScheme.secondary,
+                icon: Image.network(
+                  'https://avatars.mds.yandex.net/get-mpic/5283728/img_id7358523481806022349.png/orig',
+                  scale: 36,
                 ),
-                func: () {},
+                func: () => authBloc.add(
+                  SignUpByGoogleEvent(),
+                ),
               ),
             ],
           ),

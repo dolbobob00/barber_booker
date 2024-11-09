@@ -1,4 +1,9 @@
+import 'package:barber_booker/pages/admin_page/admin_page.dart';
+import 'package:barber_booker/pages/admin_page/admin_under_pages/all_users_page.dart';
+import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
 import 'package:barber_booker/pages/auth_reg_pages/auth_page/auth_page.dart';
+import 'package:barber_booker/pages/barber_page/barber_page.dart';
+import 'package:barber_booker/pages/barber_page/bloc/barber_info_bloc.dart';
 import 'package:barber_booker/pages/introduce_page/introduce_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +15,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'pages/auth_reg_pages/reg_page/reg_page.dart';
 import 'pages/home_page/home_page.dart';
-import 'pages/auth_bloc/auth_bloc.dart';
+import 'pages/auth_reg_pages/auth_bloc/auth_bloc.dart';
 import 'pages/splash_screen/splash_screen.dart';
 import 'styling/styling.dart';
 
@@ -26,6 +31,7 @@ void main() async {
       : false;
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+    name: "barber_booker",
   );
   runApp(const MyApp());
 }
@@ -52,6 +58,20 @@ GoRouter _goRouter = GoRouter(
       path: '/login',
       builder: (context, state) => AuthPage(),
     ),
+    GoRoute(
+      path: '/barber_page',
+      builder: (context, state) => const BarberPage(),
+    ),
+    GoRoute(
+      path: '/admin_page',
+      builder: (context, state) => const AdminPage(),
+      routes: [
+        GoRoute(
+          path: '/admin_allusers',
+          builder: (context, state) => const AllUsersPage(),
+        ),
+      ],
+    ),
   ],
 );
 
@@ -62,10 +82,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthBloc authBloc = AuthBloc();
+    AdminBloc adminBloc = AdminBloc();
+    BarberInfoBloc barberInfoBloc = BarberInfoBloc();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => authBloc,
+        ),
+        BlocProvider(
+          create: (context) => adminBloc,
+        ),
+        BlocProvider(
+          create: (context) => barberInfoBloc,
         ),
       ],
       child: HiveListener(

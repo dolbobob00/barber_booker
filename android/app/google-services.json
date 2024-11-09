@@ -2,28 +2,9 @@
   "project_info": {
     "project_number": "907465608260",
     "project_id": "barber-cabc3",
-    "storage_bucket": "barber-cabc3.appspot.com"
+    "storage_bucket": "barber-cabc3.firebasestorage.app"
   },
   "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:907465608260:android:3b77b734d3a860a549c011",
-        "android_client_info": {
-          "package_name": "com.example.barber_app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAq0i0b4GxDSqqgiwveKCPJgk2QnQCw_bI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:907465608260:android:1cd973248203b70e49c011",
@@ -31,7 +12,20 @@
           "package_name": "com.example.barber_booker"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "907465608260-5dtc00v10vvad4klmujadup2rkei9cvi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.barber_booker",
+            "certificate_hash": "c4cd59bc22229cfed57aed66b8911945e3390af7"
+          }
+        },
+        {
+          "client_id": "907465608260-hvcv6ur6ipjs9b6jm6hvv01497t30hk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAq0i0b4GxDSqqgiwveKCPJgk2QnQCw_bI"
@@ -39,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907465608260-hvcv6ur6ipjs9b6jm6hvv01497t30hk6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "907465608260-2k6rfi29dtiit34dpi2sn0vku12cm3de.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.barberBooker"
+              }
+            }
+          ]
         }
       }
     }

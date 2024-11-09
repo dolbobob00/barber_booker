@@ -11,6 +11,15 @@ class SignUpAsGuestEvent implements AuthEvent {}
 
 class SignOutEvent implements AuthEvent {}
 
+class SignUpByCodeEvent implements AuthEvent {
+  final String specialUid;
+  SignUpByCodeEvent({required this.specialUid});
+}
+
+class SignUpByGoogleEvent implements AuthEvent {
+  SignUpByGoogleEvent();
+}
+
 class RegisterEvent implements AuthEvent {
   String password;
   String loginEmail;

@@ -1,5 +1,5 @@
 import 'package:barber_booker/features/neuro_wrapper.dart';
-import 'package:barber_booker/pages/auth_bloc/auth_bloc.dart';
+import 'package:barber_booker/pages/auth_reg_pages/auth_bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +14,11 @@ class IntroducePage extends StatelessWidget {
     final blocLogin = BlocProvider.of<AuthBloc>(context);
     final themeof = Theme.of(context);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        blocLogin.add(
+          SignOutEvent(),
+        );
+      }),
       backgroundColor: themeof.colorScheme.primary,
       body: SafeArea(
         child: Column(

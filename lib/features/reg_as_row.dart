@@ -22,7 +22,7 @@ class MyIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: icon ??
-          Icon(
+          const Icon(
             Icons.alarm,
           ),
       onPressed: func,

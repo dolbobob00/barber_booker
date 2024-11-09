@@ -12,7 +12,7 @@ class NeuroWrapper extends StatelessWidget {
     return Neumorphic(
       style: NeumorphicStyle(
         shape: NeumorphicShape.flat,
-        intensity: Hive.box('app_settings').get('isLight') ? 0.86 : 0.76,
+        intensity: Hive.box('app_settings').get('isLight') ? 0.66 : 0.46,
         surfaceIntensity: 0.8,
         oppositeShadowLightSource: true,
         shadowLightColor: Hive.box('app_settings').get('isLight')

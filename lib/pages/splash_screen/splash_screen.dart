@@ -1,10 +1,11 @@
+import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../../features/neuro_wrapper.dart';
-import '../auth_bloc/auth_bloc.dart';
+import '../auth_reg_pages/auth_bloc/auth_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,6 +29,44 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    statusHandedPushToDifferentPages(String status) {
+      if (status == 'none') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/register');
+          },
+        );
+      } else if (status == 'user') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/home');
+          },
+        );
+      } else if (status == 'barber') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/barber_page');
+          },
+        );
+      } else if (status == 'admin') {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            final v = BlocProvider.of<AdminBloc>(context)
+              ..add(
+                AdminGetUsersEvent(),
+              );
+            context.go('/admin_page');
+          },
+        );
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            context.go('/afterSplash');
+          },
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Column(
@@ -39,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state is AuthLoginState) {
                 if (state.user != null) {
                   if (mounted) {
-                    context.go('/home');
+                    statusHandedPushToDifferentPages(state.status);
                   }
                 } else if (state.user == null) {
                   Future.delayed(
