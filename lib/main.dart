@@ -2,16 +2,18 @@ import 'package:barber_booker/pages/admin_page/admin_page.dart';
 import 'package:barber_booker/pages/admin_page/admin_under_pages/all_users_page.dart';
 import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
 import 'package:barber_booker/pages/auth_reg_pages/auth_page/auth_page.dart';
-import 'package:barber_booker/pages/barber_page/barber_page.dart';
 import 'package:barber_booker/pages/barber_page/bloc/barber_info_bloc.dart';
+import 'package:barber_booker/pages/home_page/bloc/booking_bloc.dart';
 import 'package:barber_booker/pages/introduce_page/introduce_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_listener/hive_listener.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
 import 'pages/auth_reg_pages/reg_page/reg_page.dart';
 import 'pages/home_page/home_page.dart';
@@ -21,6 +23,7 @@ import 'styling/styling.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   await Hive.openBox('app_settings');
   Hive.box('app_settings').isEmpty
@@ -33,7 +36,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
     name: "barber_booker",
   );
-  runApp(const MyApp());
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  initializeDateFormatting().then(
+    (_) => runApp(
+      const MyApp(),
+    ),
+  );
 }
 
 GoRouter _goRouter = GoRouter(
@@ -58,10 +69,10 @@ GoRouter _goRouter = GoRouter(
       path: '/login',
       builder: (context, state) => AuthPage(),
     ),
-    GoRoute(
-      path: '/barber_page',
-      builder: (context, state) => const BarberPage(),
-    ),
+    // GoRoute(
+    //   path: '/barber_page',
+    //   builder: (context, state) => const BarberPage(),
+    // ),
     GoRoute(
       path: '/admin_page',
       builder: (context, state) => const AdminPage(),
@@ -83,6 +94,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthBloc authBloc = AuthBloc();
     AdminBloc adminBloc = AdminBloc();
+    BookingBloc bookingBloc = BookingBloc();
     BarberInfoBloc barberInfoBloc = BarberInfoBloc();
     return MultiBlocProvider(
       providers: [
@@ -94,6 +106,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => barberInfoBloc,
+        ),
+        BlocProvider(
+          create: (context) => bookingBloc,
         ),
       ],
       child: HiveListener(

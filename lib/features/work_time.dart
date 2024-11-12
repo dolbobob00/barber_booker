@@ -1,7 +1,6 @@
 import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'time_picker.dart';
 import 'work_day_widget.dart';
@@ -11,10 +10,12 @@ class WorkTime extends StatefulWidget {
   final String uid;
   final String? initialTime;
   final String? endTime;
+  final bool isEditable;
   const WorkTime(
       {super.key,
       required this.uid,
       required this.workingDays,
+      required this.isEditable,
       this.endTime,
       this.initialTime});
 
@@ -70,15 +71,16 @@ class _WorkTimeState extends State<WorkTime> {
             children: [
               Text(
                 'Рабочее расписание',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
               ),
             ],
           ),
           const SizedBox(height: 8.0),
           WorkTimePicker(
+            isEditable: widget.isEditable,
             uid: widget.uid,
             initialTime: widget.initialTime,
             endTime: widget.endTime,
@@ -96,7 +98,7 @@ class _WorkTimeState extends State<WorkTime> {
                 return WorkDayWidget(
                   day: day,
                   isWorkingDay: isWorkingDay,
-                  onDayTapped: toggleWorkingDay,
+                  onDayTapped: widget.isEditable ? toggleWorkingDay : (_) {},
                 );
               },
             ).toList(),
@@ -114,14 +116,16 @@ class _WorkTimeState extends State<WorkTime> {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              heroTag: '${UniqueKey().toString().substring(2, 7)}14x',
-              onPressed: sendWorkingDaysToBloc,
-              child: Icon(Icons.track_changes),
-            ),
-          ),
+          widget.isEditable
+              ? Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    heroTag: '${UniqueKey().toString().substring(2, 7)}14x',
+                    onPressed: sendWorkingDaysToBloc,
+                    child: const Icon(Icons.track_changes),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

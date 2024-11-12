@@ -1,5 +1,4 @@
 import 'package:barber_booker/features/reg_as_row.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,7 +6,6 @@ import '../../../features/my_input_field.dart';
 import '../../../features/my_list_tile.dart';
 import '../bloc/admin_bloc.dart';
 import 'concrete_barber_page.dart';
-import 'concrete_user_page.dart';
 
 class AllBarbersPage extends StatelessWidget {
   const AllBarbersPage({super.key});
@@ -76,7 +74,7 @@ class AllBarbersPage extends StatelessWidget {
                                       AdminCreateBarberEvent(),
                                     );
                                     Future.delayed(
-                                      Duration(seconds: 1, milliseconds: 500),
+                                      const Duration(seconds: 1, milliseconds: 500),
                                     ).whenComplete(
                                       () {
                                         bloc.add(
@@ -151,7 +149,7 @@ class AllBarbersPage extends StatelessWidget {
                     ),
                     onTap: () => showDialog(
                       context: context,
-                      builder: (context) => Dialog(
+                      builder: (context) => const Dialog(
                         child: Text(
                           'No profile provided',
                         ),

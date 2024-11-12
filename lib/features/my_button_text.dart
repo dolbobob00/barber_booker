@@ -4,6 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class MyButton extends StatelessWidget {
   const MyButton(
       {super.key,
+      this.buttonBackgroundColor,
       required this.func,
       required this.text,
       this.height,
@@ -12,9 +13,11 @@ class MyButton extends StatelessWidget {
   final String text;
   final double? width;
   final double? height;
+  final Color? buttonBackgroundColor;
   @override
   Widget build(BuildContext context) {
     return NeuroWrapper(
+      color: buttonBackgroundColor,
       widget: InkWell(
         splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: func,
@@ -28,6 +31,7 @@ class MyButton extends StatelessWidget {
                 text,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 22,
                     ),
               ),
             ),

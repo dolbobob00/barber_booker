@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:random_password_generator/random_password_generator.dart';
 part 'admin_event.dart';
 part 'admin_state.dart';
@@ -25,6 +24,17 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     on<AdminUpdateWorkTimeEvent>(_updateWorkHours);
     on<AdminUpdateGlobalServiceEvent>(_updateGlobalService);
     on<AdminDeleteGlobalService>(_deleteGlobalService);
+    on<AdminChangeQualification>(_changeQualificationBarber);
+  }
+
+  _changeQualificationBarber(
+      AdminChangeQualification event, Emitter<AdminState> emit) {
+    _adminService.changeQualificationBarber(
+      event.courses,
+      event.experience,
+      event.specialization,
+      event.uid,
+    );
   }
 
   _deleteGlobalService(
@@ -38,11 +48,8 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
   }
 
   _updateWorkHours(AdminUpdateWorkTimeEvent event, Emitter<AdminState> emit) {
-    _adminService.changeWorkTime(
-      event.uid,
-      event.workStarts,
-      event.workEnds,
-    );
+    _adminService.changeWorkTime(event.uid, event.workStarts, event.workEnds,
+        event.dateStart, event.dateEnd);
   }
 
   _updateWorkDays(AdminUpdateWorkDaysEvent event, Emitter<AdminState> emit) {
@@ -83,9 +90,44 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
       uppercase: false,
       specialChar: false,
     )}.com";
-    final String uid =
-        "${UniqueKey().toString().substring(2, 7) + UniqueKey().toString().substring(2, 7) + UniqueKey().toString().substring(2, 7) + UniqueKey().toString().substring(2, 7) + UniqueKey().toString().substring(2, 7)} ";
+
     final String specialUidCode = UniqueKey().toString().substring(2, 5);
+
+    final currentDoc = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    String? uid = '';
+    try {
+      final userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: fakeMail,
+        password: fakePassword,
+      );
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'uid': userCredential.user!.uid,
+        'email': fakeMail,
+        'code': 'barber',
+        'name': 'User-${userCredential.user!.uid}',
+        'phone': 'null',
+        'lastdate': 'null',
+        'specialUidCode': specialUidCode,
+        'password': fakePassword,
+      });
+      uid = userCredential.user?.uid;
+      await FirebaseAuth.instance.signOut();
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: currentDoc['email'],
+        password: currentDoc['password'],
+      );
+    } catch (e) {
+      print("Error creating barber: $e");
+    }
+
     // = "${UniqueKey().toString().substring(2, 7)+ UniqueKey().toString().substring(2, 7)}-KZBARBER ";
     try {
       await _firebaseFirestore.collection('Barbers').doc(uid).set(
@@ -113,18 +155,6 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
           'integration2': 'telegram',
         },
       );
-       _firebaseFirestore.collection('Users').doc(uid).set(
-        {
-          'uid': uid,
-          'password': fakePassword,
-          'specialUidCode': specialUidCode,
-          'email': fakeMail,
-          'code': 'barber',
-          'name': 'Barber-${fakePassword.substring(1, 4)}',
-          'phone': 'null',
-          'lastdate': 'null',
-        },
-      );
       _firebaseFirestore
           .collection('Barbers')
           .doc(uid)
@@ -136,9 +166,11 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
           'email': 'fake - $fakeMail',
           'integration1': 'instagram',
           'integration2': 'telegram',
-          'workDays': ['',''],
+          'workDays': ['', ''],
           'workEndTime': '18:36',
           'workInitialTime': '7:45',
+          'workHourEndTime': 18,
+          'workHourStartTime': 7,
         },
       );
       _firebaseFirestore

@@ -3,7 +3,6 @@ import 'package:barber_booker/features/barber_services.dart';
 import 'package:barber_booker/features/contact_info.dart';
 import 'package:barber_booker/features/my_button_text.dart';
 import 'package:barber_booker/features/qualification_row.dart';
-import 'package:barber_booker/features/stars.dart';
 import 'package:barber_booker/features/work_time.dart';
 import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
 import 'package:barber_booker/pages/barber_page/bloc/barber_info_bloc.dart';
@@ -85,6 +84,7 @@ class BarberControllPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ContactInfo(
+                      isEditable: true,
                       phone: state.phone ?? 'Null',
                       email: state.email ?? 'Null',
                       integration1: state.integration1 ?? 'Null',
@@ -100,6 +100,8 @@ class BarberControllPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: QualificationRow(
+                      uid: uid,
+                      isEditable: true,
                       coursesTextController: coursesTextController,
                       experienceTextController: experienceTextController,
                       specializationTextController:
@@ -112,6 +114,7 @@ class BarberControllPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: WorkTime(
+                      isEditable: true,
                       uid: uid,
                       initialTime: initialTime,
                       endTime: endTime,
@@ -125,7 +128,8 @@ class BarberControllPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: BarberServices(
-                      barberTextController: barberTextController,
+                      isEditable: true,
+                   
                       services: services,
                       uid: uid,
                       textServices: state.globalServices,
@@ -181,7 +185,7 @@ class BarberControllPage extends StatelessWidget {
               ),
             );
           }
-          return Center(
+          return const Center(
             child: CircularProgressIndicator.adaptive(),
           );
         },

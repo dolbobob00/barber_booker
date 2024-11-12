@@ -20,11 +20,14 @@ class AdminUpdateWorkTimeEvent extends AdminEvent {
   final String workStarts;
   final String workEnds;
   final String uid;
-  AdminUpdateWorkTimeEvent({
-    required this.workStarts,
-    required this.uid,
-    required this.workEnds,
-  });
+  final TimeOfDay? dateStart;
+  final TimeOfDay? dateEnd;
+  AdminUpdateWorkTimeEvent(
+      {required this.workStarts,
+      required this.uid,
+      required this.workEnds,
+      this.dateEnd,
+      this.dateStart});
 }
 
 class AdminDeleteGlobalService extends AdminEvent {
@@ -45,6 +48,19 @@ class AdminUpdateGlobalServiceEvent extends AdminEvent {
     required this.name,
     required this.uid,
   });
+}
+
+class AdminChangeQualification extends AdminEvent {
+  final String courses;
+  final String experience;
+  final String specialization;
+  String uid;
+
+  AdminChangeQualification(
+      {required this.experience,
+      required this.specialization,
+      required this.courses,
+      required this.uid});
 }
 
 class AdminChangeContactInfoBarberEvent extends AdminEvent {

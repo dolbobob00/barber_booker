@@ -36,7 +36,7 @@ class _WorkDayWidgetState extends State<WorkDayWidget> {
         ),
         child: Text(
           widget.day,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),

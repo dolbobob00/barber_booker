@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WorkTimePicker extends StatefulWidget {
-  const WorkTimePicker({
-    super.key,
-    required this.endTime,
-    required this.uid,
-    required this.initialTime,
-  });
+  const WorkTimePicker(
+      {super.key,
+      required this.endTime,
+      required this.uid,
+      required this.initialTime,
+      required this.isEditable});
   final String uid;
+  final bool isEditable;
   final String? initialTime;
   final String? endTime;
   @override
@@ -47,10 +48,11 @@ class _WorkTimePickerState extends State<WorkTimePicker> {
               final adminBloc = BlocProvider.of<AdminBloc>(context);
               adminBloc.add(
                 AdminUpdateWorkTimeEvent(
-                  workStarts: "${startTime?.format(context) ?? '1233'} ",
-                  uid: widget.uid,
-                  workEnds: "${endTime?.format(context) ?? '1233'} ",
-                ),
+                    workStarts: "${startTime?.format(context) ?? '1233'} ",
+                    uid: widget.uid,
+                    workEnds: "${endTime?.format(context) ?? '1233'} ",
+                    dateStart: start,
+                    dateEnd: end),
               );
             },
           );
@@ -61,16 +63,20 @@ class _WorkTimePickerState extends State<WorkTimePicker> {
     return Column(
       children: [
         InkWell(
-          onTap: pickWorkHours,
+          onTap: widget.isEditable ? pickWorkHours : null,
           child: Text(
             '${startTime?.format(context) ?? "${widget.initialTime}"} - ${endTime?.format(context) ?? "${widget.endTime}"}',
-            style: themeof.textTheme.bodyMedium,
+            style: themeof.textTheme.bodyMedium!.copyWith(
+              fontSize: 25,
+            ),
           ),
         ),
-        Text(
-          'Click on time for changing work-hours',
-          style: themeof.textTheme.bodySmall,
-        ),
+        widget.isEditable
+            ? Text(
+                'Click on time for changing work-hours',
+                style: themeof.textTheme.bodySmall,
+              )
+            : Container(),
       ],
     );
   }

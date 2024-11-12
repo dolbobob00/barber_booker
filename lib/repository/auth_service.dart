@@ -1,6 +1,7 @@
 import 'package:barber_booker/repository/admin_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AdminAuth {}
@@ -20,12 +21,13 @@ class LoginWithEmail implements LoginLogic {
   FirebaseAuth auth;
   LoginWithEmail({required this.auth});
   @override
-  Future<UserCredential>? login(String email, String password) async {
+  Future<UserCredential?>? login(String email, String password) async {
     try {
       return await auth.signInWithEmailAndPassword(
           email: email, password: password);
-    } on FirebaseAuthException {
-      rethrow;
+    } on PlatformException catch (e) {
+      print(e);
+      return null;
     }
   }
 }
@@ -51,32 +53,45 @@ class FirebaseAuthService implements AuthService {
   Future<UserCredential?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+      if (gUser == null) {
+        print('User cancelled the sign-in process.');
+        return null;
+      }
 
-      if (gUser == null) return null;
       final GoogleSignInAuthentication gAuth = await gUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-      await _firebaseFirestore.collection('Users').doc(gUser.id).set(
-        {
-          'uid': gUser.id,
-          'email': gUser.email,
-          'code': 'user',
-          'name': gUser.displayName,
-          'phone': 'null',
-          'lastdate': 'null',
-        },
-      );
+
+      await _firebaseFirestore.collection('Users').doc(gUser.id).set({
+        'uid': gUser.id,
+        'email': gUser.email,
+        'code': 'user',
+        'name': gUser.displayName,
+        'phone': 'null',
+        'lastdate': 'null',
+      });
+
       return await _firebaseAuth.signInWithCredential(credential);
-    } on Exception catch (e) {
-      print(e.toString());
+    } on PlatformException catch (e) {
+      if (e.code == 'sign_in_canceled') {
+        print('Sign-in was canceled by user.');
+        return null;
+      } else {
+        print('PlatformException: ${e.message}');
+        return null;
+      }
+    } catch (e) {
+      print('Unknown error during Google Sign-In: $e');
+      return null;
     }
   }
 
   @override
   Future<UserCredential?> loginByCode(String specialUid) async {
     final docs = await _adminService.fetchBarbersDocs();
+
     for (var doc in docs) {
       if (doc['specialUidCode'] == specialUid &&
           (doc['code'] == 'barber' || doc['code'] == 'admin')) {
@@ -170,6 +185,7 @@ class FirebaseAuthService implements AuthService {
           'phone': 'null',
           'lastdate': 'null',
           'specialUidCode': 'null',
+          'password': password,
         },
       );
       return user;

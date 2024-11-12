@@ -15,7 +15,7 @@ class UserControllPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            BarberInfoRow(
+            const BarberInfoRow(
               stars: 5,
             ),
             Center(

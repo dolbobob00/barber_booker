@@ -16,7 +16,8 @@ final class AuthLoading extends AuthState {}
 class AuthLoginState extends AuthState {
   final User? user;
   String status;
-  AuthLoginState({required this.user, required this.status});
+  Map<String, int>? dayTime;
+  AuthLoginState({required this.user, required this.status, this.dayTime});
 
   AuthLoginState copyWith({User? user, String? status}) {
     return AuthLoginState(

@@ -25,31 +25,35 @@ class Theming {
     textTheme: const TextTheme(
       bodyMedium: TextStyle(
         fontFamily: 'ElMessiri',
-        fontSize: 24,
-        overflow: TextOverflow.fade,
+        fontSize: 16.8,
         fontWeight: FontWeight.w300,
+        color: Colors.black,
       ),
       labelSmall: TextStyle(
         fontSize: 14.5,
         fontFamily: 'ElMessiri',
         fontWeight: FontWeight.w700,
+        color: Colors.black,
       ),
       labelMedium: TextStyle(
         fontSize: 16,
         fontFamily: 'ElMessiri',
         fontWeight: FontWeight.w700,
+        color: Colors.black,
       ),
       titleMedium: TextStyle(),
       bodySmall: TextStyle(
         fontSize: 16,
         fontFamily: 'ElMessiri',
         fontWeight: FontWeight.w700,
+        color: Colors.black,
       ),
       titleLarge: TextStyle(
         fontFamily: 'ElMessiri',
         fontSize: 36,
         overflow: TextOverflow.fade,
         fontWeight: FontWeight.w300,
+        color: Colors.black,
       ),
     ),
   );

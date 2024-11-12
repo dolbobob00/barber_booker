@@ -92,10 +92,19 @@ class IntroducePage extends StatelessWidget {
                                           .inversePrimary,
                                     ),
                                 text:
-                                    '\n Our skilled barbers deliver precision cuts and beard grooming, using only the finest products to ensure quality and satisfaction. \n With a welcoming atmosphere and personalized service, every visit feels relaxing and enjoyable',
+                                    '\nBarberShop App is a convenient application for clients and barbers, designed to simplify booking services and managing appointments. \nThe app allows clients to easily choose their preferred barber and book a suitable time for their visit.',
                               ),
                               TextSpan(
-                                text: '\n Choose us for a cut above the rest.',
+                                text:
+                                    '\nBarbers can quickly view all of their appointments in a calendar with an easy-to-read display of the times clients have booked.',
+                                style: themeof.textTheme.titleSmall!.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inversePrimary,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '\nYou\'r comfort, is our goal.',
                                 style: themeof.textTheme.bodySmall!.copyWith(
                                   color: themeof.colorScheme.tertiary,
                                 ),
@@ -117,6 +126,8 @@ class IntroducePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MyButton(
+                          buttonBackgroundColor:
+                              const Color.fromRGBO(104, 77, 67, 1),
                           func: () => context.push('/login'),
                           text: 'Login now',
                         ),
@@ -127,6 +138,8 @@ class IntroducePage extends StatelessWidget {
                           func: () => context.push(
                             '/registration',
                           ),
+                          buttonBackgroundColor:
+                              const Color.fromRGBO(136, 109, 100, 1),
                           text: 'Or you a newbie here?',
                         ),
                       ],

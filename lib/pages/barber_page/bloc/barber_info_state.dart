@@ -2,6 +2,11 @@ part of 'barber_info_bloc.dart';
 
 class BarberInfoState {}
 
+class BarberErrorState implements BarberInfoState {
+  final String error;
+  BarberErrorState({required this.error});
+}
+
 class BarberAllInfoState implements BarberInfoState {
   String? phone;
   String? name;
@@ -16,22 +21,24 @@ class BarberAllInfoState implements BarberInfoState {
   List<dynamic>? globalServices;
   String? workInitialTime;
   String? workEndTime;
-
-  BarberAllInfoState({
-    this.globalServices,
-    this.workDays,
-    this.integration1,
-    this.integration2,
-    this.phone,
-    this.stars,
-    this.email,
-    this.name,
-    this.courses,
-    this.experience,
-    this.specialization,
-    this.workEndTime,
-    this.workInitialTime,
-  });
+  int? startTime;
+  int? endTime;
+  BarberAllInfoState(
+      {this.globalServices,
+      this.workDays,
+      this.integration1,
+      this.integration2,
+      this.phone,
+      this.stars,
+      this.email,
+      this.name,
+      this.courses,
+      this.experience,
+      this.specialization,
+      this.workEndTime,
+      this.workInitialTime,
+      this.endTime,
+      this.startTime});
 
   BarberAllInfoState copyWith({
     String? phone,

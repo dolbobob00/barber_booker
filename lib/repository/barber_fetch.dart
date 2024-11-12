@@ -76,6 +76,8 @@ class BarberFetch {
           'workDays': allMap['workDays'],
           'initialTime': allMap['workInitialTime'],
           'endTime': allMap['workEndTime'],
+          'workHourEndTime': allMap['workHourEndTime'],
+          'workHourStartTime': allMap['workHourStartTime'],
         };
         return returnedMap;
       } catch (e) {

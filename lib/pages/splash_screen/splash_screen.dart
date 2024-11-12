@@ -1,4 +1,5 @@
 import 'package:barber_booker/pages/admin_page/bloc/admin_bloc.dart';
+import 'package:barber_booker/pages/barber_page/barber_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    statusHandedPushToDifferentPages(String status) {
+    statusHandedPushToDifferentPages(String status, Map<String, int>? dayTime) {
       if (status == 'none') {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) {
@@ -45,7 +46,14 @@ class _SplashScreenState extends State<SplashScreen> {
       } else if (status == 'barber') {
         WidgetsBinding.instance.addPostFrameCallback(
           (_) {
-            context.go('/barber_page');
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => BarberPage(
+                  dayEndHour: dayTime!['workHourEndTime']!,
+                  dayStartHour: dayTime['workHourStartTime']!,
+                ),
+              ),
+            );
           },
         );
       } else if (status == 'admin') {
@@ -78,7 +86,10 @@ class _SplashScreenState extends State<SplashScreen> {
               if (state is AuthLoginState) {
                 if (state.user != null) {
                   if (mounted) {
-                    statusHandedPushToDifferentPages(state.status);
+                    statusHandedPushToDifferentPages(
+                      state.status,
+                      state.dayTime,
+                    );
                   }
                 } else if (state.user == null) {
                   Future.delayed(
@@ -115,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
             widget: Padding(
               padding: const EdgeInsets.all(8.0),
               child: NeumorphicText(
-                "Barber app\n u aura will be 10000+",
+                "Barbershop Arys",
                 style: NeumorphicStyle(
                   depth: 4, //customize depth here
                   color: Theme.of(context)

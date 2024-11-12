@@ -5,27 +5,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactInfo extends StatelessWidget {
-  const ContactInfo({
-    super.key,
-    required this.email,
-    required this.integration1,
-    required this.integration2,
-    required this.phone,
-    required this.uid,
-    required this.integration1Controller,
-    required this.integration2Controller,
-    required this.mailController,
-    required this.phoneController,
-  });
+  const ContactInfo(
+      {super.key,
+      required this.email,
+      required this.integration1,
+      required this.integration2,
+      required this.phone,
+      required this.uid,
+      this.integration1Controller,
+      this.integration2Controller,
+      this.mailController,
+      this.phoneController,
+      required this.isEditable});
+  final bool isEditable;
   final String uid;
   final String phone;
   final String email;
   final String integration1;
   final String integration2;
-  final TextEditingController phoneController;
-  final TextEditingController mailController;
-  final TextEditingController integration1Controller;
-  final TextEditingController integration2Controller;
+  final TextEditingController? phoneController;
+  final TextEditingController? mailController;
+  final TextEditingController? integration1Controller;
+  final TextEditingController? integration2Controller;
   @override
   Widget build(BuildContext context) {
     final themeof = Theme.of(context);
@@ -45,7 +46,7 @@ class ContactInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
+              const Row(
                 children: [
                   Text(
                     'Contact info',
@@ -55,25 +56,29 @@ class ContactInfo extends StatelessWidget {
               MyInputField(
                 textEditingController: phoneController,
                 labelText: phone,
-                suffix: Icon(
+                suffix: const Icon(
                   Icons.phone,
                 ),
-                underTextField: Text(
-                  'Click to change contact phone',
-                  style: themeof.textTheme.labelSmall,
-                ),
+                underTextField: isEditable
+                    ? Text(
+                        'Click to change contact phone',
+                        style: themeof.textTheme.labelSmall,
+                      )
+                    : null,
               ),
               SizedBox(
                 child: MyInputField(
                   labelText: email,
-                  suffix: Icon(
+                  suffix: const Icon(
                     Icons.email,
                   ),
                   textEditingController: mailController,
-                  underTextField: Text(
-                    'Click to change email',
-                    style: themeof.textTheme.labelSmall,
-                  ),
+                  underTextField: isEditable
+                      ? Text(
+                          'Click to change email',
+                          style: themeof.textTheme.labelSmall,
+                        )
+                      : null,
                 ),
               ),
               Row(
@@ -85,7 +90,7 @@ class ContactInfo extends StatelessWidget {
                       textEditingController: integration1Controller,
                       underTextField: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             FontAwesomeIcons.instagram,
                           ),
                           Text(
@@ -103,7 +108,7 @@ class ContactInfo extends StatelessWidget {
                       textEditingController: integration2Controller,
                       underTextField: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             FontAwesomeIcons.telegram,
                           ),
                           Text(
@@ -116,33 +121,37 @@ class ContactInfo extends StatelessWidget {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      bloc.add(
-                        AdminChangeContactInfoBarberEvent(
-                          email: mailController.text.isEmpty
-                              ? email
-                              : mailController.text,
-                          uid: uid,
-                          integration1: integration1Controller.text.isEmpty
-                              ? integration1
-                              : integration1Controller.text,
-                          integration2: integration2Controller.text.isEmpty
-                              ? integration2
-                              : integration2Controller.text,
-                          phone: phoneController.text.isEmpty
-                              ? phone
-                              : phoneController.text,
+              isEditable
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            bloc.add(
+                              AdminChangeContactInfoBarberEvent(
+                                email: mailController!.text.isEmpty
+                                    ? email
+                                    : mailController!.text,
+                                uid: uid,
+                                integration1:
+                                    integration1Controller!.text.isEmpty
+                                        ? integration1
+                                        : integration1Controller!.text,
+                                integration2:
+                                    integration2Controller!.text.isEmpty
+                                        ? integration2
+                                        : integration2Controller!.text,
+                                phone: phoneController!.text.isEmpty
+                                    ? phone
+                                    : phoneController!.text,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         );

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
+import '../domain/constants.dart';
+
 class BarberService extends StatelessWidget {
   const BarberService(
       {super.key,
@@ -21,7 +23,7 @@ class BarberService extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 28,
           child: Icon(
             Icons.room_service,
@@ -68,7 +70,7 @@ class BarberService extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.timelapse,
                       ),
                       Text(
@@ -91,7 +93,7 @@ class BarberGlobalService extends StatelessWidget {
     super.key,
     required this.serviceName,
     required this.uid,
-     this.onDelete,
+    this.onDelete,
   });
   final String serviceName;
   final VoidCallback? onDelete;
@@ -103,58 +105,64 @@ class BarberGlobalService extends StatelessWidget {
       padding: const EdgeInsets.only(
         left: 16.0,
       ),
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                25,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 6.0),
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  25,
+                ),
+                color: const Color.fromARGB(170, 223, 16, 1),
               ),
-              color: Color.fromARGB(170, 223, 16, 1),
+              child: onDelete != null
+                  ? IconButton(
+                      onPressed: onDelete,
+                      icon: Icon(
+                        Icons.delete_forever,
+                        color: themeof.colorScheme.secondary,
+                      ),
+                    )
+                  : Container(),
             ),
-            child: IconButton(
-              onPressed: onDelete,
-              icon: Icon(
-                Icons.delete_forever,
-                color: themeof.colorScheme.secondary,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.65,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  25,
+                ),
+                color: themeof.colorScheme.secondary.withOpacity(
+                  0.4,
+                ),
               ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.65,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                25,
-              ),
-              color: themeof.colorScheme.primary.withOpacity(
-                0.4,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Text(
-                  serviceName,
-                  style: themeof.textTheme.bodySmall,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Text(
+                    serviceName,
+                    style: themeof.textTheme.bodySmall,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class BarberServices extends StatefulWidget {
-  BarberServices({
+  const BarberServices({
     super.key,
     required this.services,
-    required this.barberTextController,
     required this.uid,
+    required this.isEditable,
     required this.textServices,
   });
-  final TextEditingController barberTextController;
+  final bool isEditable;
+
   final List<BarberGlobalService> services;
   final String uid;
   final List<dynamic>? textServices;
@@ -186,7 +194,6 @@ class _BarberServicesState extends State<BarberServices> {
 
     void addGlobalServiceToBloc(String value) {
       setState(() {
-
         widget.services.add(
           BarberGlobalService(
             serviceName: value,
@@ -201,14 +208,6 @@ class _BarberServicesState extends State<BarberServices> {
       });
     }
 
-    const List<String> globalServices = [
-      'Уход за волосами',
-      'Уход за бородой и усами',
-      'Уход за кожей лица',
-      'Уход за руками',
-      'Премиальные и комплексные услуги',
-      'Дополнительные услуги для комфорта клиентов'
-    ];
     final themeof = Theme.of(context);
 
     return Container(
@@ -224,92 +223,103 @@ class _BarberServicesState extends State<BarberServices> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             'Services',
           ),
           Text(
             "Global barber services",
             style: Theme.of(context).textTheme.bodySmall,
           ),
-          ...widget.services.map((service) => BarberGlobalService(
-                serviceName: service.serviceName,
-                uid: widget.uid,
-                onDelete: () => removeService(
-                    service.serviceName), // Передаём функцию удаления
-              )),
+          ...widget.services.map(
+            (service) => BarberGlobalService(
+              serviceName: service.serviceName,
+              uid: widget.uid,
+              onDelete: widget.isEditable
+                  ? () => removeService(
+                        service.serviceName,
+                      )
+                  : null,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(
               top: 8.0,
               right: 8,
             ),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => FittedBox(
-                      child: Dialog(
-                        backgroundColor: themeof.colorScheme.primary,
-                        elevation: 5,
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          child: Column(
-                            children: [
-                              Center(
-                                child: Text(
-                                  'Choose global service',
-                                  style: themeof.textTheme.bodyMedium!.copyWith(
-                                    color: themeof.colorScheme.secondary,
-                                  ),
+            child: widget.isEditable
+                ? Align(
+                    alignment: Alignment.bottomRight,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => FittedBox(
+                            child: Dialog(
+                              backgroundColor: themeof.colorScheme.primary,
+                              elevation: 5,
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                child: Column(
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        'Choose global service',
+                                        style: themeof.textTheme.bodyMedium!
+                                            .copyWith(
+                                          color: themeof.colorScheme.secondary,
+                                        ),
+                                      ),
+                                    ),
+                                    MyDropdownButton(
+                                      list: globalServices,
+                                      func: addGlobalService,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          icon: Icon(
+                                            Icons.highlight_remove,
+                                            size: 36,
+                                            color:
+                                                themeof.colorScheme.secondary,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            addGlobalServiceToBloc(
+                                              valueServiceGlobal ?? 'null',
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                          icon: Icon(
+                                            Icons.add,
+                                            size: 36,
+                                            color:
+                                                themeof.colorScheme.secondary,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
-                              MyDropdownButton(
-                                list: globalServices,
-                                func: addGlobalService,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: Icon(
-                                      Icons.highlight_remove,
-                                      size: 36,
-                                      color: themeof.colorScheme.secondary,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      addGlobalServiceToBloc(
-                                        valueServiceGlobal ?? 'null',
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
-                                    icon: Icon(
-                                      Icons.add,
-                                      size: 36,
-                                      color: themeof.colorScheme.secondary,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                            ),
                           ),
-                        ),
+                        );
+                      },
+                      heroTag: 'sadsad',
+                      child: const Icon(
+                        Icons.add,
                       ),
                     ),
-                  );
-                },
-                heroTag: 'sadsad',
-                child: Icon(
-                  Icons.add,
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           ),
         ],
       ),

@@ -46,6 +46,8 @@ class BarberInfoBloc extends Bloc<BarberInfoEvent, BarberInfoState> {
                 workInitialTime: contactInfoMap['initialTime'],
                 workEndTime: contactInfoMap['endTime'],
                 globalServices: services['GlobalServices'],
+                startTime: contactInfoMap['workHourStartTime'],
+                endTime: contactInfoMap['workHourEndTime'],
               ),
             );
           } catch (e) {
@@ -63,6 +65,8 @@ class BarberInfoBloc extends Bloc<BarberInfoEvent, BarberInfoState> {
                 workDays: contactInfoMap['workDays'],
                 workInitialTime: contactInfoMap['initialTime'],
                 workEndTime: contactInfoMap['endTime'],
+                startTime: contactInfoMap['workHourStartTime'],
+                endTime: contactInfoMap['workHourEndTime'],
               ),
             );
           }
@@ -78,6 +82,8 @@ class BarberInfoBloc extends Bloc<BarberInfoEvent, BarberInfoState> {
               workDays: contactInfoMap['workDays'],
               workInitialTime: contactInfoMap['initialTime'],
               workEndTime: contactInfoMap['endTime'],
+              startTime: contactInfoMap['workHourStartTime'],
+              endTime: contactInfoMap['workHourEndTime'],
             ),
           );
         }
@@ -91,12 +97,19 @@ class BarberInfoBloc extends Bloc<BarberInfoEvent, BarberInfoState> {
             workDays: contactInfoMap['workDays'],
             workInitialTime: contactInfoMap['initialTime'],
             workEndTime: contactInfoMap['endTime'],
+            startTime: contactInfoMap['workHourStartTime'],
+            endTime: contactInfoMap['workHourEndTime'],
           ),
         );
       }
     } on Exception catch (e) {
       print(
         e.toString(),
+      );
+      emit(
+        BarberErrorState(
+          error: e.toString(),
+        ),
       );
     }
   }

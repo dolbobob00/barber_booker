@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 abstract class AdminService {
   void changeRole(String role, String uid);
@@ -11,7 +12,14 @@ abstract class AdminService {
     String phone,
     String uid,
   );
-  void changeWorkTime(String uid, String initialTime, String endTime);
+  void changeQualificationBarber(
+    String courses,
+    String experience,
+    String specialization,
+    String uid,
+  );
+  void changeWorkTime(String uid, String initialTime, String endTime,
+      TimeOfDay? start, TimeOfDay? end);
   void changeWorkDays(String uid, List<dynamic> workDays);
   void addGlobalService(String uid, String name);
   void deleteGlobalService(String uid, String name);
@@ -37,6 +45,27 @@ class FirebaseAdminService implements AdminService {
 
   Stream<QuerySnapshot> getBarbers() {
     return _firestore.collection('Barbers').snapshots();
+  }
+
+  @override
+  void changeQualificationBarber(
+    String courses,
+    String experience,
+    String specialization,
+    String uid,
+  ) {
+    _firestore
+        .collection('Barbers')
+        .doc(uid)
+        .collection('INFORMATION')
+        .doc('EXPERIENCE')
+        .update(
+      {
+        'courses': courses,
+        'experience': experience,
+        'specialization': specialization,
+      },
+    );
   }
 
   @override
@@ -77,7 +106,8 @@ class FirebaseAdminService implements AdminService {
   }
 
   @override
-  void changeWorkTime(String uid, String initialTime, String endTime) async {
+  void changeWorkTime(String uid, String initialTime, String endTime,
+      TimeOfDay? start, TimeOfDay? end) async {
     _firestore
         .collection('Barbers')
         .doc(uid)
@@ -87,6 +117,8 @@ class FirebaseAdminService implements AdminService {
       {
         'workInitialTime': initialTime,
         'workEndTime': endTime,
+        'workHourEndTime': end?.hour ?? 19,
+        'workHourStartTime': start?.hour ?? 8,
       },
     );
   }

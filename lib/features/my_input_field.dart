@@ -53,6 +53,8 @@ class _MyInputFieldState extends State<MyInputField> {
               ),
               labelStyle: themeof.textTheme.labelMedium!.copyWith(
                 color: Theme.of(context).colorScheme.secondary,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
               prefixIcon: widget.prefix,
               suffixIcon: widget.suffix,

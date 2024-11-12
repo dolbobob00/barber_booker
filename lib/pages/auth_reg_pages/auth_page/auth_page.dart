@@ -7,8 +7,11 @@ import 'package:barber_booker/pages/auth_reg_pages/auth_bloc/auth_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pretty_animated_buttons/widgets/pretty_neumorphic_button.dart';
 
+import '../../../domain/constants.dart';
 import '../../../features/reg_as_row.dart';
 
 class AuthPage extends StatelessWidget {
@@ -140,108 +143,182 @@ class AuthPage extends StatelessWidget {
             },
             bloc: authBloc,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: MyButton(
-              func: () {
-                if (textEditingControllerEmail.text.isValidEmail()) {
-                  try {
-                    authBloc.add(
-                      LogInEvent(
-                          loginEmail: textEditingControllerEmail.text,
-                          password: textEditingControllerPassword.text),
-                    );
-                    emailFocus.unfocus();
-                    passwordFocus.unfocus();
-                  } catch (e) {
-                    final error = e as FirebaseAuthException;
-                    errorSnackBar(
-                      error.code,
-                    );
-                  }
-                } else {
-                  errorSnackBar(
-                    'Check your email',
-                  );
-                }
-              },
-              width: MediaQuery.of(context).size.width * 0.4,
-              height: MediaQuery.of(context).size.height * 0.05,
-              text: 'Login as user',
-            ),
-          ),
-          RegistrationRow(
-            iconButtons: [
-              MyIconButton(
-                icon: Icon(
-                  Icons.add_moderator,
-                  color: themeof.colorScheme.secondary,
-                ),
-                func: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => Dialog(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Are you a barber?',
-                              style: themeof.textTheme.bodySmall!.copyWith(
-                                  color: themeof.colorScheme.secondary),
-                            ),
-                            MyInputField(
-                              textEditingController:
-                                  textEditingControllerCodeUnique,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                MyIconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: themeof.colorScheme.secondary,
-                                  ),
-                                  func: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                MyIconButton(
-                                    icon: Icon(
-                                      Icons.arrow_circle_right,
-                                      color: themeof.colorScheme.secondary,
-                                    ),
-                                    func: () {
-                                      authBloc.add(
-                                        SignUpByCodeEvent(
-                                            specialUid:
-                                                textEditingControllerCodeUnique
-                                                    .text),
-                                      );
-                                    }),
-                              ],
-                            )
-                          ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RegistrationRow(
+                iconButtons: [
+                  MyIconButton(
+                    icon: Row(
+                      children: [
+                        SvgPicture.asset(
+                          width: 36,
+                          height: 36,
+                          color: themeof.colorScheme.secondary,
+                          assetName,
+                          fit: BoxFit.contain,
+                          semanticsLabel: 'Barber Logo',
                         ),
-                      ),
+                        Text(
+                          ' - for barber\'s',
+                          style: themeof.textTheme.bodySmall,
+                        ),
+                      ],
                     ),
-                  );
-                },
+                    func: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => Dialog(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height:
+                                MediaQuery.of(context).size.height * 0.16 + 24,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: BlocBuilder<AuthBloc, AuthState>(
+                                bloc: authBloc,
+                                builder: (context, state) {
+                                  if (state is AuthLoading) {
+                                    return const CircularProgressIndicator
+                                        .adaptive();
+                                  }
+
+                                  return Column(
+                                    children: [
+                                      Text(
+                                        'Are you a barber?',
+                                        style: themeof.textTheme.bodySmall!
+                                            .copyWith(
+                                                color: themeof
+                                                    .colorScheme.secondary),
+                                      ),
+                                      MyInputField(
+                                        textEditingController:
+                                            textEditingControllerCodeUnique,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          MyIconButton(
+                                            icon: Icon(
+                                              Icons.close,
+                                              color:
+                                                  themeof.colorScheme.secondary,
+                                            ),
+                                            func: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: MyButton(
+                                              func: () {
+                                                if (textEditingControllerCodeUnique
+                                                    .text.isNotEmpty) {
+                                                  try {
+                                                    authBloc.add(
+                                                      SignUpByCodeEvent(
+                                                        specialUid:
+                                                            textEditingControllerCodeUnique
+                                                                .text,
+                                                      ),
+                                                    );
+                                                  } on Exception catch (e) {
+                                                    errorSnackBar(
+                                                      e.toString(),
+                                                    );
+                                                  }
+                                                } else {
+                                                  errorSnackBar(
+                                                    'Input the code!',
+                                                  );
+                                                }
+                                              },
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.4,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.03,
+                                              text: 'Login as barber',
+                                              buttonBackgroundColor:
+                                                  const Color.fromRGBO(
+                                                      132, 104, 94, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: MyButton(
+                  func: () {
+                    if (textEditingControllerEmail.text.isValidEmail()) {
+                      try {
+                        authBloc.add(
+                          LogInEvent(
+                              loginEmail: textEditingControllerEmail.text,
+                              password: textEditingControllerPassword.text),
+                        );
+                        emailFocus.unfocus();
+                        passwordFocus.unfocus();
+                      } catch (e) {
+                        final error = e as FirebaseAuthException;
+                        errorSnackBar(
+                          error.code,
+                        );
+                      }
+                    } else {
+                      errorSnackBar(
+                        'Check your email',
+                      );
+                    }
+                  },
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  text: 'Login',
+                  buttonBackgroundColor: const Color.fromRGBO(132, 104, 94, 1),
+                ),
               ),
             ],
           ),
-          InkWell(
-            splashColor: themeof.colorScheme.inversePrimary,
-            onTap: () => context.go(
-              '/registration',
-            ),
-            child: Text(
-              'Or you a newbie here?',
-              style: themeof.textTheme.bodySmall!
-                  .copyWith(color: themeof.colorScheme.secondary),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PrettyNeumorphicButton(
+              onPressed: () => context.pushReplacement('/registration'),
+              label: 'Or you a newbie here?',
+              labelStyle: themeof.textTheme.bodySmall!.copyWith(
+                color: themeof.colorScheme.inversePrimary,
+                fontSize: 19,
+              ),
             ),
           ),
+          // InkWell(
+          //   splashColor: themeof.colorScheme.inversePrimary,
+          //   onTap: () => context.go(
+          //     '/registration',
+          //   ),
+          //   child: Text(
+          //     'Or you a newbie here?',
+          //     style: themeof.textTheme.bodySmall!
+          //         .copyWith(color: themeof.colorScheme.secondary),
+          //   ),
+          // ),
         ],
       ),
     );

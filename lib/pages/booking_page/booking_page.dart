@@ -1,18 +1,25 @@
-import 'package:barber_booker/pages/auth_reg_pages/auth_bloc/auth_bloc.dart';
 import 'package:booking_calendar/booking_calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BarberPage extends StatefulWidget {
-  const BarberPage(
-      {super.key, required this.dayEndHour, required this.dayStartHour});
-  final int dayStartHour;
-  final int dayEndHour;
+class BookingPage extends StatefulWidget {
+  const BookingPage(
+      {super.key,
+      required this.uid,
+      required this.endTime,
+      required this.missingDays,
+      required this.selfUid,
+      required this.startTime});
+  final String uid;
+  final String selfUid;
+  final int startTime;
+  final int endTime;
+  final List<int> missingDays;
+
   @override
-  State<BarberPage> createState() => _BarberPageState();
+  State<BookingPage> createState() => _BookingPageState();
 }
 
-class _BarberPageState extends State<BarberPage> {
+class _BookingPageState extends State<BookingPage> {
   final now = DateTime.now();
   late BookingService mockBookingService;
 
@@ -23,11 +30,10 @@ class _BarberPageState extends State<BarberPage> {
     // DateTime.now().endOfDay
     mockBookingService = BookingService(
         serviceName: 'Mock Service',
-        serviceDuration: 30,
-        bookingEnd:
-            DateTime(now.year, now.month, now.day, widget.dayEndHour, 0),
+        serviceDuration: 60,
+        bookingEnd: DateTime(now.year, now.month, now.day, widget.endTime, 1),
         bookingStart:
-            DateTime(now.year, now.month, now.day, widget.dayStartHour, 0));
+            DateTime(now.year, now.month, now.day, widget.startTime, 0));
   }
 
   Stream<dynamic>? getBookingStreamMock(
@@ -81,13 +87,12 @@ class _BarberPageState extends State<BarberPage> {
   @override
   Widget build(BuildContext context) {
     final themeof = Theme.of(context);
-    final authBloc = BlocProvider.of<AuthBloc>(context);
+    print(widget.selfUid);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        authBloc.add(
-          SignOutEvent(),
-        );
-      }),
+      backgroundColor: themeof.colorScheme.primary.withOpacity(
+        0.9,
+      ),
+      appBar: AppBar(),
       body: Center(
         child: BookingCalendar(
           bookingService: mockBookingService,
@@ -95,24 +100,19 @@ class _BarberPageState extends State<BarberPage> {
           getBookingStream: getBookingStreamMock,
           uploadBooking: uploadBookingMock,
           pauseSlots: generatePauseSlots(),
-          pauseSlotText: 'LUNCH',
+          pauseSlotText: 'Barber is busy',
           hideBreakTime: false,
+          lastDay: DateTime.now().add(
+            const Duration(days: 30),
+          ),
           loadingWidget: const Text('Fetching data...'),
           uploadingWidget: const CircularProgressIndicator(),
-          startingDayOfWeek: StartingDayOfWeek.tuesday,
+          disabledDays: widget.missingDays,
+          startingDayOfWeek: StartingDayOfWeek.monday,
           wholeDayIsBookedWidget:
               const Text('Sorry, for this day everything is booked'),
           //disabledDates: [DateTime(2023, 1, 20)],
           //disabledDays: [6, 7],
-          //CUSTOMIZATION
-          availableSlotTextStyle: const TextStyle(color: Colors.black),
-          bookedSlotTextStyle: const TextStyle(color: Colors.black),
-          availableSlotColor: Colors.green,
-          bookedSlotColor: Colors.red,
-          pauseSlotColor: Colors.orange,
-          selectedSlotTextStyle: const TextStyle(
-            color: Colors.black,
-          ),
         ),
       ),
     );

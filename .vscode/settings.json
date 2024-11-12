@@ -25,6 +25,9 @@
   "background.fullscreen": {
     // Local images can be dragged into the browser to quickly get the file protocol address from the address bar
     "images": [
+      "https://media.tenor.com/7WbRvUKO9JUAAAAi/ram-png.gif",
+      "https://media.tenor.com/BjL4bPMuvrIAAAAj/aaa.gif",
+      "https://media.tenor.com/8kawcKa745AAAAAi/rem-re-zero.gif",
       "file:///C:/Users/user/Downloads/1483460843_APPChtt.jpg",
       "file:///C:/Users/user/Downloads/1470085485_wallhaven-395902.png",
       "file:///C:/Users/user/Downloads/a7e4f643933c837b0de6ce061de5935d.jpg",
@@ -33,7 +36,6 @@
       "file:///C:/Users/user/Downloads/1504171182_tumblr_o65rjk2rdb1s307p6o2_500.gif",
       "file:///C:/Users/user/Downloads/1483283249_JESUS%20WAIFU.gif",
       "file:///C:/Users/user/Downloads/1586317557_1498879634_1.gif",
-      "file:///C:/Users/user/Downloads/3ce71cb8d91cd3e70cc6e1c4d435139970bb8dcdr1-540-304_hq.gif",
       "file:///C:/Users/user/Downloads/3ce71cb8d91cd3e70cc6e1c4d435139970bb8dcdr1-540-304_hq.gif",
       "file:///C:/Users/user/Downloads/1586317557_1498879634_1.gif",
       "file:///C:/Users/user/Downloads/1483283249_JESUS%20WAIFU.gif",
@@ -55,6 +57,16 @@
     "images": [
       "file:///C:/Users/user/Downloads/imahge.png",
       "file:///C:/Users/user/Downloads/imiage.png",
+      "file:///C:/Users/user/Downloads/1483283249_JESUS%20WAIFU.gif",
+      "file:///C:/Users/user/Downloads/1586317557_1498879634_1.gif",
+      "file:///C:/Users/user/Downloads/3ce71cb8d91cd3e70cc6e1c4d435139970bb8dcdr1-540-304_hq.gif",
+      "file:///C:/Users/user/Downloads/1586317557_1498879634_1.gif",
+      "file:///C:/Users/user/Downloads/1483283249_JESUS%20WAIFU.gif",
+      "file:///C:/Users/user/Downloads/1504171182_tumblr_o65rjk2rdb1s307p6o2_500.gifgif",
+      "file:///C:/Users/user/Downloads/static-assets-upload12228545836519213872.webp",
+      "https://c.tenor.com/koyvA5GzYVUAAAAC/beatrice-re-zero.gif",
+      "https://steamuserimages-a.akamaihd.net/ugc/441731065155718268/0D8896060D92736720432A74D6FE8EF794F134A1/",
+      "https://i.pinimg.com/originals/b5/d4/c8/b5d4c8989203985fb7b576cc5ad6dd2d.gif",
     ],
     "opacity": 0.35,
     "size": "cover",
