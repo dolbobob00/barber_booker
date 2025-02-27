@@ -11,6 +11,7 @@ A Flutter application for booking barber services and managing a barbershop.
 - Contact information management
 - Qualification and experience tracking
 - Neumorphic UI design
+- Integrated flexible theme, also now have light and black theme
 
 ## Project Structure
 Need big refactoring because i learned few new features! But not now..
