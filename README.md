@@ -15,9 +15,6 @@ A Flutter application for booking barber services and managing a barbershop.
 ## Project Structure
 Need big refactoring because i learned few new features! But not now..
 
-### Domain
-- `constants.dart` - Global constants and configurations
-
 ## Main information 
 Project contains:
 - admin logic + controll screen
